@@ -31,8 +31,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 			},
 			items: [{
 				region: 'center',
-				//title: _text('MN00026')+' '+_text('MN00027'),
-				title: '<?= _text('MN00026').' '._text('MN00027')?>',
+				// 프로젝트 정보
+				// title: '<?= _text('MN00026').' '._text('MN00027')?>',
+				title: _text('MN00026')+' '+_text('MN00027'),
 				xtype: 'grid',
 				id: 'proj_list',
 				listeners: {
@@ -54,20 +55,23 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 
 						var menu = new Ext.menu.Menu({
 							items: [{
-								text : '수정',
-								icon: '/led-icons/application_edit.png',
+								// text : '수정',
+								text : _text('MN00035'),
+									icon: '/led-icons/application_edit.png',
 								handler: function(b, e){
 									var sm = self.getSelectionModel();
 									if(sm.hasSelection()){
 										
 										registProjForm('update', sm.getSelected().get('proj_id'));
 									}else{
-										//Ext.Msg.alert(_text('MN00023'), _text('MSG00008'));
-										Ext.Msg.alert('<?= _text('MN00023')?>','<?=_text('MSG00008')?>');
+										// 알림 수정할 프로젝트를 선택해주세요.
+										//Ext.Msg.alert('<?= _text('MN00023')?>','<?=_text('MSG00008')?>');
+										Ext.Msg.alert(_text('MN00023'), _text('MSG00008'));
 									}
 								}
 							},{
-								text : '삭제',
+								// text : '삭제',
+								text : _text('MN00031'),
 								icon: '/led-icons/application_delete.png',
 								handler: function(b, e){
 									var sm = self.getSelectionModel();
@@ -75,8 +79,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 
 										requestProj('remove', sm.getSelected().data);
 									}else{
-										//Ext.Msg.alert(_text('MN00023'), _text('MSG00009'));
-										Ext.Msg.alert('<?= _text('MN00023')?>','<?=_text('MSG00009')?>');
+										// 알림 삭제할 프로젝트를 선택하주세요.
+										// Ext.Msg.alert('<?= _text('MN00023')?>','<?=_text('MSG00009')?>');
+										Ext.Msg.alert(_text('MN00023'), _text('MSG00009'));
 									}
 								}
 							}]
@@ -84,17 +89,38 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						menu.showAt(e.getXY());
 					}
 				},
-				tbar: ['고객사 : ',{
+				tbar: [
+				// 고객사
+				// '<?= _text('MN00042')?>',{
+				 _text('MN00042'),{
 					xtype: 'textfield',
 					fieldLabel: '고객사',
 					id: 'cust_nm',
-					width: 120
-				},'-','프로젝트 : ',{
+					width: 120,
+					enableKeyEvents: true,
+						listeners: {
+						// 라이센스 관리 엔터 검색 기능 추가 // jsshin 24-08-23
+						keypress: function(self, e){
+							storeReload(self, e);
+						}
+					}
+				// 프로젝트
+				// },'-','<?= _text('MN00026')?>',{
+				},'-', _text('MN00026'),{
 					xtype: 'textfield',
 					fieldLabel: '프로젝트',
 					id: 'proj_nm',
-					width: 120
-				},'-','품명 : ',{
+					width: 120,
+					enableKeyEvents: true,
+					listeners: {
+						// 라이센스 관리 엔터 검색 기능 추가 // jsshin 24-08-23
+						keypress: function(self, e){
+							storeReload(self, e);
+						}
+					}
+				// 품명
+				// },'-','<?= _text('MN00043')?>',{
+				},'-', _text('MN00043'),{
 					width: 120,
 					xtype: 'combo',
 					fieldLabel: '품명',
@@ -104,6 +130,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 					mode: 'local',
 					displayField: 'd',
 					valueField: 'v',
+					enableKeyEvents: true,
 					store: new Ext.data.ArrayStore({
 						fields: [
 							'v', 'd'
@@ -127,25 +154,35 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 					listeners: {
 						render: function(self){
 							self.setValue(self.getStore().getAt(0).get('v'));
+						},
+						select: function(self, record, index){
+							storeReload(self);
+						},
+						// 라이센스 관리 엔터 검색 기능 추가 // jsshin 24-08-23
+						keypress: function(self, e){
+							storeReload(self, e);
 						}
 					}
 				},{
-					text: '검색',
+					// text: '검색',
+					text: _text('MN00038'),
 					icon: '/led-icons/magnifier.png',
 					listeners: {
 						click: function(self){
-							Ext.getCmp('proj_list').getStore().load();
+							Ext.getCmp('proj_list').getStore().reload();
 							Ext.getCmp('license_list').getStore().removeAll();
 						}
 					}
 				}/*,'-',{
-					text: '등록',
+					// text: '등록',
+					text: _text('MN00044'),
 					icon: '/led-icons/application_add.png',
 					handler: function(btn, e){
 						registProjForm('regist', '');
 					}
 				}*/,'-',{
-					text: '수정',
+					// text: '수정',
+					text: _text('MN00035'),
 					icon: '/led-icons/application_edit.png',
 					handler: function(btn, e){
 						var select_proj = Ext.getCmp('proj_list').getSelectionModel().getSelected();
@@ -157,7 +194,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						registProjForm('update', select_proj.get('proj_id'));
 					}
 				}/*,'-',{
-					text: '삭제',
+					// text: '삭제',
+					text: _text('MN00031'),
 					icon: '/led-icons/application_delete.png',
 					handler: function(btn, e){
 						var select_proj = Ext.getCmp('proj_list').getSelectionModel().getSelected();
@@ -167,7 +205,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						}
 
 						Ext.Msg.show({
-							title: '알림',
+							// title: '알림',
+							title: text: _text('MN00023'),
 							msg: '선택한 '+select_proj.get('proj_nm')+'프로젝트를 삭제하시겠습니까?',
 							buttons: Ext.Msg.OKCANCEL,
 							fn: function(btnId, text, opts){
@@ -178,7 +217,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						});
 					}
 				},'-',{
-					text: '사용',
+					// text: '사용',
+					text: text: _text('MN00045'),
 					hidden: <?if($user_level == 'L09' || $user_level == 'L04'){ echo 'false'; } else { echo 'true'; } ?>,
 					//icon: '/led-icons/application_delete.png',
 					handler: function(btn, e){
@@ -191,7 +231,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						requestProj('use', select_proj.data);
 					}
 				},{
-					text: '사용 안함',
+					// text: '사용 안함',
+					text: text: _text('MN00046'),
 					hidden: <?if($user_level == 'L09' || $user_level == 'L04'){ echo 'false'; } else { echo 'true'; } ?>,
 					//icon: '/led-icons/application_delete.png',
 					handler: function(btn, e){
@@ -284,7 +325,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						selectionchange: function(selModel){
 							if(Ext.isEmpty(selModel.getSelected())) return;
 
-							Ext.getCmp('license_list').getStore().load();
+							Ext.getCmp('license_list').getStore().reload();
 
 							var select_row = selModel.getSelected();
 							var use = Ext.getCmp('proj_list').topToolbar.items.items[16];
@@ -324,15 +365,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 			},{
 				region: 'south',
 				height: 450,
-				//title: _text('MN00028')+' '+_text('MN00027'),
-				title: '<?= _text('MN00028').' '._text('MN00027')?>',
+				// 라이센스 정보
+				// title: '<?= _text('MN00028').' '._text('MN00027')?>',
+				title: _text('MN00028')+' '+_text('MN00027'),
 				xtype: 'editorgrid',
 				id: 'license_list',
 				loadMask: true,
 				tbar: [{
 					icon: '/led-icons/arrow_refresh.png',
-					//text: _text('MN00029'),
-					text: '<?= _text('MN00029')?>',
+					// 새로고침
+					// text: '<?= _text('MN00029')?>',
+					text: _text('MN00029'),
 					handler: function(btn){
 						Ext.getCmp('license_list').getStore().reload();
 					}
@@ -355,7 +398,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 				},'-',{
 				*/
 					// text: 추가,
-					text: '<?= _text('MN00030')?>',
+					// text: '<?= _text('MN00030')?>',
+					text: _text('MN00030'),
 					icon: '/led-icons/application_add.png',
 					handler: function(btn){
 						var proj_rows = Ext.getCmp('proj_list').getSelectionModel().getSelected();
@@ -368,15 +412,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 					}
 				},'-',{
 					icon: '/led-icons/application_delete.png',
-					//text: 삭제,
-					text: '<?= _text('MN00031')?>',
+					// text: 삭제,
+					// text: '<?= _text('MN00031')?>',
+					text: _text('MN00031'),
 					handler: function(btn){
 						requestLicense('delete', 'license_list');
 					}
 				},'-',{
 					icon: '/led-icons/arrow_undo.png',
-					//text: _text('MN00032'),
-					text: '<?= _text('MN00032')?>',
+					// 초기화
+					// text: '<?= _text('MN00032')?>',
+					text: _text('MN00032'),
 					handler: function(btn){
 						var license_rows = Ext.getCmp('license_list').getSelectionModel().getSelected();
 						if(Ext.isEmpty(license_rows)){
@@ -385,7 +431,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						}
 
 						Ext.Msg.show({
-							title: '알림',
+							// title: '알림',
+							title: _text('MN00023'),
 							msg: '선택하신 라이센스를 초기화하시겠습니까?',
 							buttons: Ext.Msg.OKCANCEL,
 							fn: function(btn){
@@ -423,8 +470,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						
 					}
 				},'-',{
-					//text: _text('MN00033'),
-					text: '<?= _text('MN00033')?>',
+					// 오프라인 라이센스 발급
+					// text: '<?= _text('MN00033')?>',
+					text: _text('MN00033'),
 					handler: function(btn){
 						var license_row = Ext.getCmp('license_list').getSelectionModel().getSelected();
 						if(Ext.isEmpty(license_row)){
@@ -446,8 +494,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						document.body.appendChild(aIframe);
 					}
 				},'-',{
-					//text: _text('MN00034'),
-					text: '<?= _text('MN00034')?>',
+					// 텍스트 다운로드
+					// text: '<?= _text('MN00034')?>',
+					text: _text('MN00034'),
 					handler: function(btn){
 						var license_row = Ext.getCmp('license_list').getSelectionModel().getSelected();
 						if(Ext.isEmpty(license_row)){
@@ -468,7 +517,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 
 						document.body.appendChild(aIframe);
 					}
-				},'-','구분 : ',{
+					// 구분
+				},'-', _text('MN00047'),{
 					xtype: 'combo',
 					width: 120,
 					id: 'search_licensetype',
@@ -505,10 +555,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 							self.setValue(self.getStore().getAt(0).get('v'));
 						},
 						select: function(self, record, index){
-							Ext.getCmp('license_list').getStore().load();
+							Ext.getCmp('license_list').getStore().reload();
 						}
 					}
-				},'-','상태 : ',{
+					// 상태
+				},'-', _text('MN00048') ,{
 					xtype: 'combo',
 					width: 120,
 					id: 'search_regStatus',
@@ -532,7 +583,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 							self.setValue(self.getStore().getAt(0).get('v'));
 						},
 						select: function(self, record, index){
-							Ext.getCmp('license_list').getStore().load();
+							Ext.getCmp('license_list').getStore().reload();
 						}
 					}
 				},'-', {
@@ -541,7 +592,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 					boxLabel: '만료된 라이센스',
 					listeners: {
 						check: function(self, checked){
-							Ext.getCmp('license_list').getStore().load();
+							Ext.getCmp('license_list').getStore().reload();
 						}
 					}
 				}],
@@ -754,7 +805,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 
 	var licenseContextmenu = new Ext.menu.Menu({
 		items : [{
-			text : '발급',
+			// 발급
+			text : _text('MN00049'),
 			handler: function(){
 				var selectedRows = Ext.getCmp('license_list').getSelectionModel().getSelections();
 				
@@ -768,7 +820,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 				setProvide('Y', license_ids.join(','));
 			}
 		}, {
-			text : '발급취소',
+			// 발급취소
+			text : _text('MN00050'),
 			handler: function(){
 				var selectedRows = Ext.getCmp('license_list').getSelectionModel().getSelections();
 				
@@ -923,7 +976,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 				},'-',{
 					icon: '/led-icons/application_delete.png',
 					disabled: is_disable,
-					text: '삭제',
+					// text: '삭제',
+					text: _text('MN00031'),
 					handler: function(btn){
 						requestLicense('delete', 'registProjForm_license');
 					}
@@ -1035,9 +1089,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 				}
 			}],
 			buttons: [{
-				text: '닫기',
+				//text: '닫기',
+				text: _text('MN00050'),
 				handler: function(btn){
-					Ext.getCmp('proj_list').getStore().load();
+					Ext.getCmp('proj_list').getStore().reload();
 					Ext.getCmp('license_list').getStore().removeAll();
 					btn.ownerCt.ownerCt.close();
 				}
@@ -1072,7 +1127,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 							}
 							else{
 								selectProjRow = '';
-								Ext.getCmp('proj_list').getStore().load();
+								Ext.getCmp('proj_list').getStore().reload();
 							}
 						}											
 						else{

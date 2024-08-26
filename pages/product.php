@@ -1,6 +1,7 @@
 <?
 session_start();
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 ?>
 (function(){
 	var productPanel = {
@@ -9,7 +10,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 		items: [{
 			xtype: 'grid',
 			id: 'product_list',
-			tbar: ['구분 : ',{
+			tbar: [
+				// 구분
+				_text('MN00047'),{
 				width: 150,
 				xtype: 'combo',
 				id: 'search_f_product_type',
@@ -17,7 +20,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 				editable: false,
 				mode: 'local',
 				displayField: 'd',
-				valueField: 'v',
+				valueField: 'v', 
 				store: new Ext.data.ArrayStore({
 					fields: [
 						'v', 'd'
@@ -43,32 +46,58 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 				listeners: {
 					render: function(self){
 						self.setValue(self.getStore().getAt(0).get('v'));
+					},
+					select: function(self, record, index){
+						storeReload(self);
+						console.log("self ::: ", self)
 					}
 				}
-			},'회사명 : ',{
+				// 회사명
+			// },'-','<?= _text('MN00040')?> : ',{
+			},'-', _text('MN00040') ,{
 				width: 200,
 				xtype: 'textfield',
-				id: 'search_f_company_nm'
-			},'제품명 : ',{
-				width: 200,
-				xtype: 'textfield',
-				id: 'search_f_product_nm'
-			},{
-				text: '검색',
-				icon: '/led-icons/magnifier.png',
+				id: 'search_f_company_nm',
+				// 제품 관리 엔터 검색 기능 추가 // jsshin 24-08-23
+				enableKeyEvents: true,
 				listeners: {
+					keypress: function(self, e){
+						storeReload(self, e);
+					}
+				}
+				// 제품명
+			// },'-','<?= _text('MN00041')?> : ',{
+			},'-', _text('MN00041') ,{
+				width: 200,
+				xtype: 'textfield',
+				id: 'search_f_product_nm',
+				// 제품 관리 엔터 검색 기능 추가 // jsshin 24-08-23
+				enableKeyEvents: true,
+				listeners: {
+					keypress: function(self, e){
+						storeReload(self, e);
+					}
+				}
+			},{
+				// 검색
+				// text: '<?= _text('MN00038')?>',
+				text: _text('MN00038') ,
+				icon: '/led-icons/magnifier.png',
+				listeners: {	 
 					click: function(self){
-						Ext.getCmp('product_list').getStore().load();
+						storeReload(self);
 					}
 				}
 			},'-',{
-				text: '등록',
+				// text: '등록',
+				text: _text('MN00044'),
 				icon: '/led-icons/application_add.png',
 				handler: function(btn, e){
 					registProductForm('regist', '');
 				}
 			},'-',{
-				text: '수정',
+				// text: '수정',
+				text: _text('MN00035'),
 				icon: '/led-icons/application_edit.png',
 				handler: function(btn, e){
 					var select_prod = Ext.getCmp('product_list').getSelectionModel().getSelected();
@@ -82,7 +111,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 			}
 			
 			,'-',{
-				text: '삭제',
+				// text: '삭제',
+				text: _text('MN00031'),
 				icon: '/led-icons/application_delete.png',
 				handler: function(btn, e){
 					var select_proj = Ext.getCmp('product_list').getSelectionModel().getSelected();
@@ -91,7 +121,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 						return;
 					}
 					Ext.Msg.show({
-						title: '알림',
+						// title: '알림',
+						title: _text('MN00023'),
 						msg: select_proj.get('product_nm')+' 제품을 삭제하시겠습니까?',
 						buttons: Ext.Msg.OKCANCEL,
 						fn: function(btn){
@@ -130,7 +161,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 					var menu = new Ext.menu.Menu({
 						items: [
 							{
-								text : '수정',
+								// text : '수정',
+								text : _text('MN00035'),
 								icon: '/led-icons/application_edit.png',
 								handler: function(b, e){
 									var sm = self.getSelectionModel();
@@ -154,13 +186,15 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 								}
 							}
 							/*,{
-								text: '삭제',
+								// text: '삭제',
+								text : _text('MN00031'),
 								icon: '/led-icons/application_delete.png',
 								handler: function(b, e){
 									var sm = self.getSelectionModel();
 									if(sm.hasSelection()){
 										Ext.Msg.show({
-											title: '알림',
+											// title: '알림',
+											title: _text('MN00023'),
 											msg: sm.getSelected().get('product_nm')+' 제품을 삭제하시겠습니까?',
 											buttons: Ext.Msg.OKCANCEL,
 											fn: function(btn){
@@ -403,7 +437,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 					request(flag, registProductForm_data);
 				}
 			},{
-				text: '닫기',
+				// text: '닫기',
+				text: _text('MN00051'),
 				handler: function(btn){
 					btn.ownerCt.ownerCt.close();
 				}
@@ -441,7 +476,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
 					try{
 						var r = Ext.decode(response.responseText);
 						if(r.success){
-							Ext.getCmp('product_list').getStore().load();
+							getList(product_list);
 							if(action == 'regist' || action == 'update'){
 								Ext.getCmp('registProductForm').ownerCt.close();
 							}

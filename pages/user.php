@@ -12,31 +12,43 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 			xtype: 'grid',
 			id: 'user_list',
 			tbar: [
-			/*
-			'사용자 : ',{
+				// 사용자명
+				// '<?= _text('MN00037')?>' ,{
+				_text('MN00037'), {
 				width: 200,
 				xtype: 'textfield',
-				id: 'search_key'
+				id: 'search_key',
+				enableKeyEvents: true,
+				// 사용자 관리 엔터 검색 기능 추가	// jsshin 24-08-23
+				listeners: {
+				keypress: function(self, e){
+					storeReload(self, e);
+				}
+			}
 			},{
-				text: '검색',
+				// 검색
+				// text: '<?= _text('MN00038')?>',
+				text: _text('MN00038'),
 				icon: '/led-icons/magnifier.png',
 				listeners: {
 					click: function(self){
-						Ext.getCmp('user_list').getStore().load();
+						storeReload(self);
 					}
 				}
 			},'-',
-			*/
+			
 			{
-				//text: _text('MN00030'),
-				text: '<?= _text('MN00030')?>',
+				// 추가
+				// text: '<?= _text('MN00030')?>',
+				text: _text('MN00030'),
 				icon: '/led-icons/application_add.png',
 				handler: function(btn, e){
 					registUser('regist', '');
 				}
 			},'-',{
-				//text: _text('MN00035'),
-				text: '<?= _text('MN00035')?>',
+				// 수정
+				// text: '<?= _text('MN00035')?>',
+				text: _text('MN00035'),
 				icon: '/led-icons/application_edit.png',
 				handler: function(btn, e){
 					var selectRow = Ext.getCmp('user_list').getSelectionModel().getSelected();
@@ -49,8 +61,9 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 				}
 			}
 			,'-',{
-				//text: _text('MN00031'),
-				text: '<?= _text('MN00031')?>',
+				// 삭제
+				// text: '<?= _text('MN00031')?>',
+				text: _text('MN00031'),
 				icon: '/led-icons/application_delete.png',
 				handler: function(btn, e){
 					var selectRow = Ext.getCmp('user_list').getSelectionModel().getSelected();
@@ -63,15 +76,17 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 				}
 			},'-',{
 				icon: '/led-icons/arrow_refresh.png',
-				//text: _text('MN00029'),
-				text: '<?= _text('MN00029')?>',
+				// 새로고침
+				// text: '<?= _text('MN00029')?>',
+				text: _text('MN00029'),
 				handler: function(btn){
-					Ext.getCmp('user_list').getStore().reload();
+					storeReload(btn);
 				}
 			},'-',{
 				icon: '/led-icons/arrow_refresh.png',
-				//text: _text('MN00036'),
-				text: '<?= _text('MN00036')?>',
+				// 패스워드 초기화
+				// text: '<?= _text('MN00036')?>',
+				text: _text('MN00036'),
 				handler: function(btn){
 					var selectRow = Ext.getCmp('user_list').getSelectionModel().getSelected();
 					var name = selectRow.data.lastname + selectRow.data.firstname;
@@ -79,8 +94,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						Ext.Msg.alert('알림', '삭제할 프로젝트를 선택해주세요.');
 						return;
 					}
+					
 					Ext.Msg.show({
-						title: '알림',
+						// 알림
+						// text: '<?= _text('MN00023')?>',
+						text: _text('MN00023'),
 						msg: name+' 님의 비밀번호를 gemiso1!로 초기화 하시겠습니까??',
 						buttons: Ext.Msg.OKCANCEL,
 						fn: function(btn){
@@ -148,11 +166,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 						}
 					},
 					beforeload: function(self, opts){
-						//var searchkey = Ext.getCmp('search_key').getValue();
+						var searchkey = Ext.getCmp('search_key').getValue();
 
 						self.baseParams = {
 							action: 'getUserList'
-							//,searchkey: searchkey
+							,searchkey: searchkey
 						}
 					},
 					load: function(self, records, opts){
@@ -240,7 +258,8 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 					request(action, values);
 				}
 			},{
-				text: '취소',
+				// text: '취소',
+				text: _text('MN00050'),
 				handler: function(btn){
 					btn.ownerCt.ownerCt.close();
 				}
@@ -270,7 +289,7 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 					try{
 						var r = Ext.decode(response.responseText);
 						if(r.success){
-							Ext.getCmp('user_list').getStore().load();
+							storeReload(self);;
 							if(action == 'regist' || action == 'update_in_userManagement'){
 								Ext.getCmp('registUserForm').close();
 							}
@@ -514,4 +533,5 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 	}
 
 	return productPanel;
+
 })()

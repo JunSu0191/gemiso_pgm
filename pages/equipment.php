@@ -1,6 +1,7 @@
 <?
 session_start();
 require_once($_SERVER['DOCUMENT_ROOT'].'/lib/config.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/lib/lang.php');
 
 $product_list = $db->queryAll("
 	SELECT	C.CODE, C.CODE_NM
@@ -18,7 +19,9 @@ $product_list = $db->queryAll("
 		items: [{
 			xtype: 'grid',
 			id: 'equipment_list',
-			tbar: ['구분 : ',{
+			tbar: [
+				// 구분 
+				_text('MN00047'), {
 				width: 150,
 				xtype: 'combo',
 				id: 'search_f_equ_type',
@@ -46,37 +49,59 @@ $product_list = $db->queryAll("
 						self.setValue(self.getStore().getAt(0).get('v'));
 					},
 					select: function(self, record, index){
-						Ext.getCmp('equipment_list').getStore().load();
+						storeReload(self);
+					}
+				} 	
+			}
+			// 사용자명
+			// ,'-' , '<?= _text('MN00037')?> : ',
+			,'-' , _text('MN00037'),
+			{
+				width: 150,
+				xtype: 'textfield',
+				id: 'search_f_login_id',
+				enableKeyEvents: true,
+				// 자산 관리 엔터 검색 기능 추가 // jsshin 24-08-23
+				listeners: {
+					keypress: function(self, e){
+						storeReload(self, e);
 					}
 				}
 			}
-			,'-' , '사용자명 : ',
+			// 장비명
+			// ,'-' , '<?= _text('MN00039')?>',
+			,'-' , _text('MN00039'),
 			{
 				width: 150,
 				xtype: 'textfield',
-				id: 'search_f_login_id'
+				id: 'search_f_equ_nm',
+				enableKeyEvents: true,
+				listeners: {
+				// 자산 관리 엔터 검색 기능 추가 // jsshin 24-08-23
+				keypress: function(self, e){
+					storeReload(self, e);
+				}
 			}
-			,'-' , '장비명',
-			{
-				width: 150,
-				xtype: 'textfield',
-				id: 'search_f_equ_nm'
 			},{
-				text: '검색',
+				// 검색
+				// text: '<?= _text('MN00038')?>',
+				text: _text('MN00038'),
 				icon: '/led-icons/magnifier.png',
 				listeners: {
 					click: function(self){
-						Ext.getCmp('equipment_list').getStore().load();
+						storeReload(self);
 					}
 				}
 			},'-',{
-				text: '등록',
+				// text: '등록',
+				text: _text('MN00044'),
 				icon: '/led-icons/application_add.png',
 				handler: function(btn, e){
 					registEquipmentForm('regist', '');
 				}
 			},'-',{
-				text: '수정',
+				// text: '수정',
+				text: _text('MN00035'),
 				icon: '/led-icons/application_edit.png',
 				handler: function(btn, e){
 					var select_prod = Ext.getCmp('equipment_list').getSelectionModel().getSelected();
@@ -89,7 +114,8 @@ $product_list = $db->queryAll("
 				}
 			}
 			,'-',{
-				text: '삭제',
+				// text: '삭제',
+				text: _text('MN00031'),
 				icon: '/led-icons/application_delete.png',
 				handler: function(btn, e){
 					var select_proj = Ext.getCmp('equipment_list').getSelectionModel().getSelected();
@@ -99,7 +125,8 @@ $product_list = $db->queryAll("
 					}
 
 					Ext.Msg.show({
-						title: '알림',
+						// title: '알림',
+						title: _text('MN00023'),
 						msg: '[ '+select_proj.get('equ_type_nm')+' ]<br>'+select_proj.get('equ_nm')+'<br> 장비를 삭제하시겠습니까?',
 						buttons: Ext.Msg.OKCANCEL,
 						fn: function(btn){
@@ -134,7 +161,8 @@ $product_list = $db->queryAll("
 
 					var menu = new Ext.menu.Menu({
 						items: [{
-							text : '수정',
+							// text : '수정',
+							text : _text('MN00031'),
 							icon: '/led-icons/application_edit.png',
 							handler: function(b, e){
 								var sm = self.getSelectionModel();
@@ -404,7 +432,8 @@ $product_list = $db->queryAll("
 					request(flag, registEquipmentForm_data);
 				}
 			},{
-				text: '닫기',
+				// text: '닫기',
+				text: _text('MN00050'),
 				handler: function(btn){
 					btn.ownerCt.ownerCt.close();
 				}
@@ -453,7 +482,7 @@ $product_list = $db->queryAll("
 					try{
 						var r = Ext.decode(response.responseText);
 						if(r.success){
-							Ext.getCmp('equipment_list').getStore().load();
+							Ext.getCmp('equipment_list').getStore().reload();
 							if(action == 'regist' || action == 'update'){
 								Ext.getCmp('registEquipmentForm').ownerCt.close();
 							}

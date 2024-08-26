@@ -216,4 +216,106 @@
 		<emenu>reset password</emenu>
 		<desc>-</desc>
 	</menu>
+	<menu>
+		<mcode>MN00037</mcode>
+		<hmenu>사용자명</hmenu>
+		<emenu>username</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00038</mcode>
+		<hmenu>검색</hmenu>
+		<emenu>Search</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00039</mcode>
+		<hmenu>장비명</hmenu>
+		<emenu>equipment</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00040</mcode>
+		<hmenu>회사명</hmenu>
+		<emenu>Company name</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00041</mcode>
+		<hmenu>제품명</hmenu>
+		<emenu>Product name</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00042</mcode>
+		<hmenu>고객사</hmenu>
+		<emenu>Customer</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00043</mcode>
+		<hmenu>품명</hmenu>
+		<emenu>Product name</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00044</mcode>
+		<hmenu>등록</hmenu>
+		<emenu>registration</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00045</mcode>
+		<hmenu>사용</hmenu>
+		<emenu>use</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00046</mcode>
+		<hmenu>사용 안함</hmenu>
+		<emenu>not use</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00047</mcode>
+		<hmenu>구분</hmenu>
+		<emenu>division</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00048</mcode>
+		<hmenu>상태</hmenu>
+		<emenu>status</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00049</mcode>
+		<hmenu>발급</hmenu>
+		<emenu>issued</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00050</mcode>
+		<hmenu>발급취소</hmenu>
+		<emenu>Cancellation of issuance</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00050</mcode>
+		<hmenu>닫기</hmenu>
+		<emenu>close</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00051</mcode>
+		<hmenu>코드유형</hmenu>
+		<emenu>Code type</emenu>
+		<desc>-</desc>
+	</menu>
+	<menu>
+		<mcode>MN00052</mcode>
+		<hmenu>복사</hmenu>
+		<emenu>copy</emenu>
+		<desc>-</desc>
+	</menu>
 </root>

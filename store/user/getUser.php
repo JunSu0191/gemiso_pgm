@@ -45,6 +45,7 @@ try
 	}
 	else if($action == 'getUserList'){
 		$searchkey = $_REQUEST['searchkey'];
+		$searchkey = trim($_REQUEST['searchkey']);
 		$codeId_jobGrade = $db->queryOne("SELECT ID FROM BC_CODE_TYPE WHERE CODE = 'JOB_GRADE'");
 		$codeId_userLevel = $db->queryOne("SELECT ID FROM BC_CODE_TYPE WHERE CODE = 'USER_LEVEL'");
 
@@ -68,6 +69,8 @@ try
 					, (SELECT (LASTNAME||FIRSTNAME) FROM BC_USER WHERE LOGIN_ID = U.UPDATE_USER) UPDATE_USER_NM
 			FROM	BC_USER U
 			WHERE	U.USE_YN = 'Y'
+			-- 사용자 관리 페이지 검색 쿼리문 추가		// jsshin 24-08-23
+			AND		(U.LASTNAME||U.FIRSTNAME) LIKE ('%".$searchkey."%')	
 			".$sort_q."
 		";
 		
